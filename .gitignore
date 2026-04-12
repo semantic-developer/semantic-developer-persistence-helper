@@ -1,0 +1,13 @@
+.build/
+.swiftpm/
+DerivedData/
+*.xcodeproj
+*.xcworkspace
+*.xcuserstate
+.DS_Store
+
+# Release artifacts are intentionally staged in latest-releases/ when they are
+# meant to be published. Keep transient archives out of the repo root.
+*.tar.gz
+*.zip
+*.sha256

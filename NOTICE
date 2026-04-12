@@ -1,0 +1,10 @@
+Semantic Developer Persistence Helper
+Copyright 2026 Stainless Designer LLC
+
+Licensed under the Apache License, Version 2.0.
+
+This repository contains the remote persistence helper used by Semantic
+Developer for optional persisted SSH sessions.
+
+The contents of this NOTICE file are for informational purposes only and do not
+modify the License.
