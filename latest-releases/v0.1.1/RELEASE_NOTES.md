@@ -1,4 +1,4 @@
-# semantic-developer-helper v0.1.0
+# semantic-developer-helper v0.1.1
 
 Build date: 2026-04-12T17:19:42Z
 
@@ -12,7 +12,7 @@ Notes:
 
 - macOS arm64 was built from this public helper repo on April 12, 2026.
 - Linux arm64 and x86_64 artifacts were copied from the existing private app repo helper artifact bundle and renamed for the public helper release.
-- Before production use, rebuild Linux artifacts from this public repo in clean Linux CI and replace these staged binaries.
+- Future production releases should use the GitHub Actions release workflow so all supported artifacts are built from this public source tree.
 
 Checksums:
 

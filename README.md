@@ -117,7 +117,7 @@ include:
 
 ```text
 latest-releases/
-  v0.1.0/
+  v0.1.1/
     semantic-developer-helper-macos-arm64
     semantic-developer-helper-linux-x86_64
     semantic-developer-helper-linux-arm64

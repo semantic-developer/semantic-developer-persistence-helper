@@ -43,6 +43,8 @@ private let replayBufferLimit = 256
 @main
 enum RemotePersistenceHelperMain {
     static func main() async {
+        signal(SIGPIPE, SIG_IGN)
+
         let arguments = CommandLine.arguments
 
         if arguments.contains("--hello") {
@@ -1198,6 +1200,7 @@ private func daemonSocketPath() throws -> String {
     let directoryURL = FileManager.default.homeDirectoryForCurrentUser
         .appendingPathComponent(".semantic-developer", isDirectory: true)
     try FileManager.default.createDirectory(at: directoryURL, withIntermediateDirectories: true)
+    chmod(directoryURL.path, S_IRWXU)
     return directoryURL.appendingPathComponent("persistence-helper.sock").path
 }
 
@@ -1286,6 +1289,8 @@ private func makeUnixListener(at path: String) throws -> Int32 {
         _ = close(fd)
         throw HelperError.socketFailure("bind failed: \(errno)")
     }
+
+    chmod(path, S_IRUSR | S_IWUSR)
 
     guard listen(fd, 16) == 0 else {
         _ = close(fd)

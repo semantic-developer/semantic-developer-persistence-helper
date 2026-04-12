@@ -1,0 +1,60 @@
+name: Release Artifacts
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Release version, for example v0.1.1
+        required: true
+        type: string
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    name: ${{ matrix.artifact }}
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - artifact: semantic-developer-helper-macos-arm64
+            runner: macos-14
+          - artifact: semantic-developer-helper-linux-x86_64
+            runner: ubuntu-24.04
+          - artifact: semantic-developer-helper-linux-arm64
+            runner: ubuntu-24.04-arm
+    steps:
+      - uses: actions/checkout@v4
+      - name: Resolve version
+        id: version
+        shell: bash
+        run: |
+          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+            echo "value=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=${{ inputs.version }}" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Select Xcode
+        if: runner.os == 'macOS'
+        run: sudo xcode-select -s /Applications/Xcode.app
+      - name: Install Swift
+        if: runner.os == 'Linux'
+        uses: swift-actions/setup-swift@v2
+        with:
+          swift-version: "6.0"
+      - name: Build release artifact
+        run: scripts/build-release.sh "${{ steps.version.outputs.value }}"
+      - name: Upload helper artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: latest-releases/${{ steps.version.outputs.value }}/${{ matrix.artifact }}
+          if-no-files-found: error
+      - name: Upload checksum
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}-SHA256SUMS
+          path: latest-releases/${{ steps.version.outputs.value }}/SHA256SUMS
+          if-no-files-found: error

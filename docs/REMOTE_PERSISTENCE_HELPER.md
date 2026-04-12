@@ -112,14 +112,14 @@ Expected bundled artifact names:
 
 - `semantic-developer-helper-linux-x86_64`
 - `semantic-developer-helper-linux-arm64`
-- `semantic-developer-helper-darwin-x86_64`
-- `semantic-developer-helper-darwin-arm64`
+- `semantic-developer-helper-macos-x86_64`
+- `semantic-developer-helper-macos-arm64`
 
 Artifacts staged in this repo now:
 
 - `semantic-developer-helper-linux-x86_64`
 - `semantic-developer-helper-linux-arm64`
-- `semantic-developer-helper-darwin-arm64`
+- `semantic-developer-helper-macos-arm64`
 
 That means persisted-session flows can install directly from a bundled binary on:
 
