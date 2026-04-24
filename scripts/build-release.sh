@@ -13,8 +13,6 @@ mkdir -p "$OUT_DIR"
 
 cd "$ROOT_DIR"
 
-swift build -c release --product semantic-developer-helper
-
 HOST_OS="$(uname -s)"
 HOST_ARCH="$(uname -m)"
 case "$HOST_OS:$HOST_ARCH" in
@@ -25,7 +23,17 @@ case "$HOST_OS:$HOST_ARCH" in
   *) PLATFORM_SUFFIX="$(echo "$HOST_OS" | tr '[:upper:]' '[:lower:]')-$HOST_ARCH" ;;
 esac
 
+BUILD_ARGS=(-c release --product semantic-developer-helper)
+if [[ "$HOST_OS" == "Linux" ]]; then
+  # Statically link the Swift stdlib so the helper runs on hosts without
+  # a Swift runtime installed. libc/libpthread remain dynamically linked.
+  BUILD_ARGS+=(-Xswiftc -static-stdlib)
+fi
+
+swift build "${BUILD_ARGS[@]}"
+
 cp ".build/release/semantic-developer-helper" "$OUT_DIR/semantic-developer-helper-$PLATFORM_SUFFIX"
+strip -s "$OUT_DIR/semantic-developer-helper-$PLATFORM_SUFFIX" 2>/dev/null || true
 
 (
   cd "$OUT_DIR"
