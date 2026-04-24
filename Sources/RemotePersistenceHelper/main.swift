@@ -1105,7 +1105,12 @@ private func launchPersistedProcess(
     }
 
     let slaveName = String(cString: slaveNamePointer)
-    let slaveFD = open(slaveName, O_RDWR)
+    // O_NOCTTY: do not let the parent helper claim this PTY as its
+    // controlling terminal. If the parent claims it, the child's
+    // ioctl(TIOCSCTTY) silently fails (stealing requires CAP_SYS_ADMIN)
+    // and bash boots without job control, printing
+    // "cannot set terminal process group" / "no job control in this shell".
+    let slaveFD = open(slaveName, O_RDWR | O_NOCTTY)
     guard slaveFD >= 0 else {
         _ = close(masterFD)
         throw HelperError.connectionFailed
